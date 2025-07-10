@@ -1,0 +1,216 @@
+{%load static%}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>True Scan - Video</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&family=Pacifico&display=swap"
+        rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="/static/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="/static/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="/static/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="/static/css/style.css" rel="stylesheet">
+ 
+</head>
+
+<body>
+    <div class="container-xxl bg-white p-0">
+        <!-- Spinner Start -->
+        <div id="spinner"
+            class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+
+
+          <!-- Navbar & Hero Start -->
+          <div class="container-xxl position-relative p-0">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
+                <a href="/" class="navbar-brand p-0">
+                     <h1 class="text-primary m-0"></i>True Scan</h1>
+                    <!-- <img src="img/logo.png" alt="Logo"> -->
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <span class="fa fa-bars"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav ms-auto py-0 pe-4">
+                        <a href="/images" class="nav-item nav-link ">Image</a>
+                        <a href="/videos" class="nav-item nav-link active">Video</a>
+                        <a href="/#about" class="nav-item nav-link">About</a>
+
+                    </div>
+                    {% if not user.is_authenticated %}
+                    <!-- Login Button for Non-Logged-In Users -->
+                    <a href="/login" class="btn btn-primary py-2 px-4">Login</a>
+                {% else %}
+                    <!-- Display User's Name when Logged In -->
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Hello, {{ user.first_name|default:user.username }}!</a>
+                        <div class="dropdown-menu m-0">
+                            <a href="/logout-user" class="dropdown-item">Logout</a>
+                            <a href="/profile" class="dropdown-item">Profile</a>
+                        </div>
+                    </div>
+                {% endif %}
+                </div>
+            </nav>
+
+            <div class="container-xxl py-5 bg-dark hero-header">
+                <div class="container text-center my-5 pt-5 pb-4">
+                    <h1 class="display-3 text-white mb-3 animated slideInDown">Video</h1>
+                </div>
+            </div>
+        </div>
+        <!-- Navbar & Hero End -->
+
+
+        <div style="background-color: #f8f9fa; padding-top: 80px; padding: 5rem 0rem">
+            <div class="container">
+                <div class="row align-items-center justify-content-center">
+                    <div class="col-12 my-auto">
+                        <h1 class="h1 text-center text-primary mb-5">DeepFake Video Detection</h1>
+        
+                        <div class="card shadow-lg mx-auto" style="max-width: 40rem; border-radius: 15px; padding: 20px;">
+                            <!-- Video Section -->
+                            <div class="text-center mb-4">
+                                <video width="100%" controls id="videos" style="height: 30rem; object-fit: contain; border-radius: 10px;">
+                                    <source src="" id="video_source">
+                                    Your browser does not support HTML5 video.
+                                </video>
+                            </div>
+        
+                            <!-- Form Section -->
+                            <form class="form" method="POST" enctype="multipart/form-data" name="video-upload" id="video-upload" class="text-center mt-3">
+                                <h5 class="card-title text-center mb-3 text-primary">Upload Your Video</h5>
+                                <p class="card-text text-center text-muted mb-4">Choose a file and click "Detect Now" to proceed with video analysis.</p>
+        
+                                {% csrf_token %}
+        
+                                <!-- Video File Upload -->
+                                <div class="form-group">
+                                    <label for="{{ form.upload_video_file.id_for_label }}" class="form-label">Select Video File</label>
+                                    {{ form.upload_video_file }}
+                                    {% if form.upload_video_file.errors %}
+                                        {% for each_error in form.upload_video_file.errors %}
+                                            <div class="alert alert-danger mt-1 {{ form.upload_video_file.id_for_label }}">
+                                                {{ each_error }}
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+        
+                                <!-- Hidden Sequence Length Input -->
+                                <div class="form-group" style="display: none;">
+                                    <input type="number" value="60" hidden="true" id="{{ form.sequence_length.id_for_label }}" name="{{ form.sequence_length.name }}">
+                                    {% if form.sequence_length.errors %}
+                                        {% for each_error in form.sequence_length.errors %}
+                                            <div class="alert alert-danger mt-1 {{ form.sequence_length.id_for_label }}">
+                                                {{ each_error }}
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+        
+                                <!-- Submit Button -->
+                                <div class="text-center mt-4">
+                                    <button id="videoUpload" type="submit" name="submit" class="btn btn-primary btn-lg px-5 py-3">Upload & Detect Now</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+       
+        
+
+
+
+        <!-- Deepfake Detection Feature Footer Start -->
+        <div class="container-fluid bg-dark text-light footer pt-5  wow fadeIn" data-wow-delay="0.1s">
+            <div class="container py-5">
+                <div class="row g-5">
+                    <div class="col-lg-4 col-md-6">
+                        <h4 class="section-title ff-secondary text-start text-primary fw-normal mb-4">Deepfake Detection
+                        </h4>
+                        <a class="btn btn-link" href="">About Deepfake Detection</a>
+                        <a class="btn btn-link" href="">How It Works</a>
+                        <a class="btn btn-link" href="">AI Models</a>
+                        <a class="btn btn-link" href="">Use Cases</a>
+                        <a class="btn btn-link" href="">FAQ</a>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <h4 class="section-title ff-secondary text-start text-primary fw-normal mb-4">Contact Us</h4>
+                        <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>University of Management and Technology C-II, Johar Town, Lahore.
+                        </p>
+                        <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+92 42 35212801-10</p>
+                        <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@umt.edu.pk</p>
+                        
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <h4 class="section-title ff-secondary text-start text-primary fw-normal mb-4">Detection Model
+                            Updates</h4>
+                        <h5 class="text-light fw-normal">Latest Update</h5>
+                        <p>Our AI model now detects deepfake videos with 98% accuracy!</p>
+                        <h5 class="text-light fw-normal">Upcoming Features</h5>
+                        <p>Incorporating voice recognition to combat audio-based deepfakes.</p>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <!-- Deepfake Detection Feature Footer End -->
+
+
+
+
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/lib/wow/wow.min.js"></script>
+    <script src="/static/lib/easing/easing.min.js"></script>
+    <script src="/static/lib/waypoints/waypoints.min.js"></script>
+    <script src="/static/lib/counterup/counterup.min.js"></script>
+    <script src="/static/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="/static/lib/tempusdominus/js/moment.min.js"></script>
+    <script src="/static/lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="/static/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="/static/js/main.js"></script>
+    <script src="/static/js/script.js"></script>
+</body>
+
+</html>

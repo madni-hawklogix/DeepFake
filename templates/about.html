@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}About Page{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="text-center mb-5">About Our Project</h1>
+
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <h2>University of Management and Technology</h2>
+            <p>We are a group of passionate students from the University of Management and Technology (UMT) dedicated to advancing the field of artificial intelligence and media forensics. Our project focuses on developing cutting-edge solutions to address challenges related to media integrity, digital security, and the detection of deepfakes.</p>
+            <p>
+                In an era where misinformation and the manipulation of digital media are becoming increasingly prevalent, our mission is to create tools that can accurately and efficiently verify the authenticity of multimedia content. Our research integrates machine learning, computer vision, and forensic analysis to combat the spread of fake media.
+            </p>
+        </div>
+        <div class="col-md-6">
+            <img src="{% static 'images/uni.jpg'%}" alt="University of Management and Technology" class="img-fluid rounded">
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="mb-4">Our Project: Deepfake Detection</h2>
+            <p class="mb-3">We are developing a cutting-edge system for detecting deepfake images, videos, and audio. Our project aims to combat the spread of misinformation and protect the integrity of digital media.</p>
+    
+            <p class="mb-3">In today’s digital age, the creation and dissemination of deepfake media—realistic but fabricated images, videos, and audio—pose significant threats to privacy, security, and truthfulness. Deepfakes are increasingly used in contexts ranging from social media to political campaigns, undermining trust in digital content and leading to potential misuse in areas like identity theft, defamation, and fake news dissemination.</p>
+    
+            <p class="mb-3">Our project addresses these critical challenges by leveraging advanced artificial intelligence and media forensics. The need for such technology has never been more urgent:</p>
+    
+            <ul class="mb-4">
+                <li><strong>Combat Misinformation:</strong> Deepfakes have the power to distort reality, making it difficult to discern fact from fiction. Our detection system is designed to verify the authenticity of digital media, ensuring that information consumed by the public is accurate and trustworthy.</li>
+                <li><strong>Protect Digital Integrity:</strong> As digital media plays an increasingly central role in various industries—from journalism to legal documentation—ensuring its integrity is essential for safeguarding societal values and ethical standards.</li>
+                <li><strong>Empower Security:</strong> Media manipulation poses risks not only for individuals but also for organizations and governments. By detecting deepfakes, our project aims to bolster cybersecurity measures, minimizing threats associated with manipulated content.</li>
+                <li><strong>Ethical AI Development:</strong> We are committed to ethical AI practices, ensuring our deepfake detection system respects privacy, bias elimination, and transparency in its decision-making processes.</li>
+                <li><strong>Innovation in Forensics:</strong> Traditional methods of verifying media authenticity are often insufficient in detecting sophisticated and highly realistic deepfakes. Our innovative system incorporates state-of-the-art machine learning techniques to stay ahead of emerging challenges.</li>
+            </ul>
+    
+            <p>Without effective detection systems, the authenticity of digital media is at risk. Our project not only contributes to academic research but also supports practical, real-world applications that influence policy, media literacy, and cybersecurity across industries. Through continued innovation and collaboration, we aim to empower users and organizations with tools to combat digital deception and maintain a reliable digital ecosystem.</p>
+        </div>
+    </div>
+    
+    
+
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2>Meet Our Team</h2>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <strong>Abdul Muhaiman Butt:</strong> Leads the development of the deepfake detection algorithm, focusing on machine learning and computer vision techniques.
+                </li>
+                <li class="list-group-item">
+                    <strong>Eman Aamir:</strong> Manages data preprocessing and dataset creation, ensuring high-quality, labeled media for training the detection system.
+                </li>
+                <li class="list-group-item">
+                    <strong>Bilawal Abbas:</strong> Oversees the integration of real-time analysis features, ensuring the system is efficient for live media validation.
+                </li>
+                <li class="list-group-item">
+                    <strong>Mir Zawar:</strong> Focuses on ethical AI considerations, ensuring transparency and bias-free decision-making within the deepfake detection process.
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+</div>
+
+{% endblock %}
