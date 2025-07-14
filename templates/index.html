@@ -71,17 +71,17 @@
                     {% else %}
                         <!-- Display User's Name when Logged In -->
                         <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Hello, {{ user.first_name|default:user.username }}!</a>
-                            <div class="dropdown-menu m-0">
-                                <a href="/logout-user" class="dropdown-item">Logout</a>
-                                <a href="/profile" class="dropdown-item">Profile</a>
+                            <button href="#" class="btn btn-sm btn-primary py-2 px-4 nav-link dropdown-toggle" data-bs-toggle="dropdown" style="color: #ffff; border-radius: 10px;">Hello, {{ user.first_name|default:user.username }}!</button>
+                            <div class="dropdown-menu m-0" style="border-radius: 12px;">
+                                <a href="/logout-user" class="dropdown-item" style="border-radius: 15px; transition: color 0.2s;" onmouseover="this.style.color='#e11bf3'" onmouseout="this.style.color=''" >Logout</a>
+                                <a href="/profile" class="dropdown-item" style="border-radius: 15px; transition: color 0.2s;" onmouseover="this.style.color='#e11bf3'" onmouseout="this.style.color=''">Profile</a>
                             </div>
                         </div>
                     {% endif %}
                 </div>
             </nav>
 
-            <div class="container-xxl py-5 bg-dark hero-header mb-5">
+            <div class="container-xxl py-5 bg-dark hero-header mb-5" style="padding-top: 3rem !important; padding-bottom: 3rem !important;">
                 <div class="container my-5 py-5">
                     <div class="row align-items-center g-5">
                         <div class="col-lg-6 text-center text-lg-start">
@@ -279,7 +279,7 @@
 
 
         <!-- Team Start -->
-        <div class="container-xxl pt-5 pb-3">
+        <!-- <div class="container-xxl pt-5 pb-3">
             <div class="container">
                 <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
                     <h5 class="section-title ff-secondary text-center text-primary fw-normal">Team Members</h5>
@@ -356,7 +356,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- Team End -->
 
 
