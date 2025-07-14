@@ -785,7 +785,9 @@ progress {
 
 .col-6 {
     flex: 0 0 auto;
-    width: 50%
+    width: 50%;
+    padding-top: 3rem !important;
+    padding-bottom: 3rem !important
 }
 
 .col-7 {
@@ -8067,8 +8069,8 @@ fieldset:disabled .btn {
 }
 
 .py-5 {
-    padding-top: 3rem !important;
-    padding-bottom: 3rem !important
+    padding-top: 0rem !important;
+    padding-bottom: 0rem !important
 }
 
 .pt-0 {
