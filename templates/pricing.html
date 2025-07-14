@@ -1,24 +1,21 @@
-{%load static%}
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
-    <title>DeepFake Detection - Login</title>
+    <title>Pricing | True Scan</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
 
     <!-- Favicon -->
-    <link href="img/favicon.ico" rel="icon">
+    <link href="/static/images/favicon.ico" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&family=Pacifico&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&family=Pacifico&display=swap" rel="stylesheet">
 
     <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
@@ -34,45 +31,30 @@
 
     <!-- Template Stylesheet -->
     <link href="/static/css/style.css" rel="stylesheet">
-
 </head>
 
 <body>
     <div class="container-xxl bg-white p-0">
-        <!-- Spinner Start -->
-        <div id="spinner"
-            class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
-        <!-- Spinner End -->
-
-
-        <!-- Navbar & Hero Start -->
+        <!-- Navbar Start -->
         <div class="container-xxl position-relative p-0">
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
                 <a href="/" class="navbar-brand p-0">
-                     <h1 class="text-primary m-0"></i>True Scan</h1>
-                    <!-- <img src="img/logo.png" alt="Logo"> -->
+                    <h1 class="text-primary m-0">True Scan</h1>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                     <span class="fa fa-bars"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <div class="navbar-nav ms-auto py-0 pe-4">
-                        <a href="/images" class="nav-item nav-link ">Image</a>
-                        <a href="/videos" class="nav-item nav-link active">Video</a>
+                        <a href="/images" class="nav-item nav-link">Image</a>
+                        <a href="/videos" class="nav-item nav-link">Video</a>
                         <a href="/voice" class="nav-item nav-link">Voice</a>
-                        <a href="/pricing" class="nav-item nav-link">Pricing</a>
-                        <a href="/about" class="nav-item nav-link">About</a>
-
+                        <a href="/pricing" class="nav-item nav-link active">Pricing</a>
+                        <a href="/#about" class="nav-item nav-link">About</a>
                     </div>
                     {% if not user.is_authenticated %}
-                        <!-- Login Button for Non-Logged-In Users -->
                         <a href="/login" class="btn btn-primary py-2 px-4">Login</a>
                     {% else %}
-                        <!-- Display User's Name when Logged In -->
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Hello, {{ user.first_name|default:user.username }}!</a>
                             <div class="dropdown-menu m-0">
@@ -84,99 +66,82 @@
                 </div>
             </nav>
 
+            <!-- Hero Section Start -->
             <div class="container-xxl py-5 bg-dark hero-header">
                 <div class="container text-center my-5 pt-5 pb-4">
-                  <h1 class="display-3 text-white mb-3 animated slideInDown">Register</h1>
+                    <h1 class="display-3 text-white mb-3 animated slideInDown">Pricing Plans</h1>
                 </div>
-              </div>
-
+            </div>
+            <!-- Hero Section End -->
         </div>
         <!-- Navbar & Hero End -->
-
 
         <div class="bg-light py-5">
             <div class="container">
                 <div class="row justify-content-center">
-                    <div class="col-6">
+                    <div class="col-12">
                         <div class="card shadow-lg p-4">
-                            <h3 class="text-center text-primary mb-4">Register</h3>
-
-                            <!-- Displaying Error or Success Messages -->
-                            {% if messages %}
-                            <div class="mb-3">
-                                {% for message in messages %}
-                                <div
-                                    class="alert 
-                                            {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}">
-                                    {{ message }}
+                            <div class="row justify-content-center">
+                                <!-- Free Plan -->
+                                <div class="col-md-4 mb-4">
+                                    <div class="card h-100 shadow-sm border-primary" id="free">
+                                        <div class="card-body text-center">
+                                            <h5 class="card-title">Free</h5>
+                                            <h2 class="card-price">$0<span class="period">/mo</span></h2>
+                                            <ul class="list-unstyled mt-3 mb-4">
+                                                <li>Basic Deepfake Detection</li>
+                                                <li>Image & Video Analysis</li>
+                                                <li>Community Support</li>
+                                            </ul>
+                                            <a href="/register" class="btn btn-outline-primary">Choose Plan</a>
+                                        </div>
+                                    </div>
                                 </div>
-                                {% endfor %}
+                                <!-- Pro Plan -->
+                                <div class="col-md-4 mb-4">
+                                    <div class="card h-100 shadow border-success" id="pro">
+                                        <div class="card-body text-center">
+                                            <h5 class="card-title">Pro</h5>
+                                            <h2 class="card-price">$19<span class="period">/mo</span></h2>
+                                            <ul class="list-unstyled mt-3 mb-4">
+                                                <li>All Free Features</li>
+                                                <li>Priority Processing</li>
+                                                <li>Voice Analysis</li>
+                                                <li>Email Support</li>
+                                            </ul>
+                                            <a href="/register" class="btn btn-success">Choose Plan</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Enterprise Plan -->
+                                <div class="col-md-4 mb-4">
+                                    <div class="card h-100 shadow border-warning" id="enterprise">
+                                        <div class="card-body text-center">
+                                            <h5 class="card-title">Enterprise</h5>
+                                            <h2 class="card-price">Contact Us</h2>
+                                            <ul class="list-unstyled mt-3 mb-4">
+                                                <li>All Pro Features</li>
+                                                <li>Custom Integrations</li>
+                                                <li>Dedicated Support</li>
+                                                <li>SLAs & Reporting</li>
+                                            </ul>
+                                            <a href="/register" class="btn btn-warning">Choose Plan</a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            {% endif %}
-
-                            <!-- Registration Form -->
-                            <form method="POST" action="{% url 'register' %}">
-                                {% csrf_token %}
-
-                                <!-- Name Field -->
-                                <div class="form-group mb-3">
-                                    <label for="name" class="form-label">Full Name</label>
-                                    <input type="text" class="form-control" id="name" name="name"
-                                        placeholder="Enter your full name" required>
-                                </div>
-
-                                <!-- Email Field -->
-                                <div class="form-group mb-3">
-                                    <label for="email" class="form-label">Email Address</label>
-                                    <input type="email" class="form-control" id="email" name="email"
-                                        placeholder="Enter your email" required>
-                                </div>
-
-                                <!-- Password Field -->
-                                <div class="form-group mb-3">
-                                    <label for="password" class="form-label">Password</label>
-                                    <input type="password" class="form-control" id="password" name="password"
-                                        placeholder="Enter your password" required>
-                                </div>
-
-                                <!-- Confirm Password Field -->
-                                <div class="form-group mb-3">
-                                    <label for="confirm_password" class="form-label">Confirm Password</label>
-                                    <input type="password" class="form-control" id="confirm_password"
-                                        name="confirm_password" placeholder="Confirm your password" required>
-                                </div>
-
-                                <!-- Register Button -->
-                                <div class="form-group mb-3">
-                                    <button type="submit" class="btn btn-primary w-100">Register</button>
-                                </div>
-
-                                <!-- Link to Login Page -->
-                                <div class="text-center mt-3">
-                                    <p class="text-muted">Already have an account? <a href="/login">Login here</a></p>
-                                </div>
-                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-
-
-
-
-
-
-
-
-        <!-- Deepfake Detection Feature Footer Start -->
+        <!-- Footer Start -->
         <div class="container-fluid bg-dark text-light footer pt-5  wow fadeIn" data-wow-delay="0.1s">
             <div class="container py-5">
                 <div class="row g-5">
                     <div class="col-lg-4 col-md-6">
-                        <h4 class="section-title ff-secondary text-start text-primary fw-normal mb-4">Deepfake Detection
-                        </h4>
+                        <h4 class="section-title ff-secondary text-start text-primary fw-normal mb-4">Deepfake Detection</h4>
                         <a class="btn btn-link" href="">About Deepfake Detection</a>
                         <a class="btn btn-link" href="">How It Works</a>
                         <a class="btn btn-link" href="">AI Models</a>
@@ -185,28 +150,21 @@
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <h4 class="section-title ff-secondary text-start text-primary fw-normal mb-4">Contact Us</h4>
-                        <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>University of Management and Technology C-II, Johar Town, Lahore.
-                        </p>
+                        <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>University of Management and Technology C-II, Johar Town, Lahore.</p>
                         <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+92 42 35212801-10</p>
                         <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@umt.edu.pk</p>
-                        
                     </div>
                     <div class="col-lg-4 col-md-6">
-                        <h4 class="section-title ff-secondary text-start text-primary fw-normal mb-4">Detection Model
-                            Updates</h4>
+                        <h4 class="section-title ff-secondary text-start text-primary fw-normal mb-4">Detection Model Updates</h4>
                         <h5 class="text-light fw-normal">Latest Update</h5>
                         <p>Our AI model now detects deepfake videos with 98% accuracy!</p>
                         <h5 class="text-light fw-normal">Upcoming Features</h5>
                         <p>Incorporating voice recognition to combat audio-based deepfakes.</p>
                     </div>
-                    
                 </div>
             </div>
         </div>
-        <!-- Deepfake Detection Feature Footer End -->
-
-
-
+        <!-- Footer End -->
 
         <!-- Back to Top -->
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
@@ -226,7 +184,6 @@
 
     <!-- Template Javascript -->
     <script src="/static/js/main.js"></script>
-    <script src="/static/js/script.js"></script>
 </body>
 
-</html>
+</html> 

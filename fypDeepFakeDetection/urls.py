@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from .views import Home, Image, Video, predict_page, About, Login, Register, logoutUser, Profile, Voice
+from .views import Home, Image, Video, predict_page, About, Login, Register, logoutUser, Profile, Voice,Pricing
 
 urlpatterns = [
     path('', Home, name="home"),
@@ -9,6 +9,7 @@ urlpatterns = [
     path('voice/', Voice, name="voice"),
     path('predict/', predict_page, name='predict'),
     path('about/', About, name='about'),
+    path('pricing/', Pricing, name='pricing'),
     path('login/', Login, name='login'),
     path('register/', Register, name='register'),
     path('logout-user/', logoutUser, name='logout'),

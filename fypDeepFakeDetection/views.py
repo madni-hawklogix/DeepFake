@@ -155,6 +155,10 @@ train_transforms = transforms.Compose([
                                         transforms.ToTensor(),
                                         transforms.Normalize(mean,std)])
 
+@csrf_exempt
+def Pricing(request):
+    return render(request, 'pricing.html')
+
 class Model(nn.Module):
 
     def __init__(self, num_classes,latent_dim= 2048, lstm_layers=1 , hidden_dim = 2048, bidirectional = False):
