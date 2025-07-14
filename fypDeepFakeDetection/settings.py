@@ -134,6 +134,7 @@ STATICFILES_DIRS = [
     os.path.join(PROJECT_DIR, 'models'),
 ]
 
+LOGIN_URL = '/login/'
 
 CONTENT_TYPES = ['video']
 MAX_UPLOAD_SIZE = "104857600"
