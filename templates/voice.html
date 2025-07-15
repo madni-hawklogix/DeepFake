@@ -5,7 +5,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>True Scan - Voice</title>
+    <title>True Scan - Audio</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -58,7 +58,7 @@
                     <div class="navbar-nav ms-auto py-0 pe-4">
                         <a href="/images" class="nav-item nav-link">Image</a>
                         <a href="/videos" class="nav-item nav-link">Video</a>
-                        <a href="/voice" class="nav-item nav-link active">Voice</a>
+                        <a href="/voice" class="nav-item nav-link active">Audio</a>
                         <a href="/pricing" class="nav-item nav-link">Pricing</a>
                         <a href="/about" class="nav-item nav-link">About</a>
                     </div>
@@ -80,7 +80,7 @@
 
             <div class="container-xxl py-5 bg-dark hero-header mb-5">
                 <div class="container text-center my-5 pt-5 pb-4">
-                    <h1 class="display-3 text-white mb-3 animated slideInDown">Voice Analysis</h1>
+                    <h1 class="display-3 text-white mb-3 animated slideInDown">Audio Analysis</h1>
                 </div>
             </div>
         </div>
@@ -92,18 +92,18 @@
                 <div class="row g-5">
                     <div class="col-lg-6">
                         <div class="wow fadeInUp" data-wow-delay="0.1s">
-                            <h1 class="mb-4">Upload Voice File</h1>
+                            <h1 class="mb-4">Upload Audio File</h1>
                             <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
                                 {% csrf_token %}
                                 <div class="row g-3">
                                     <div class="col-md-12">
                                         <div class="form-floating">
                                             <input type="file" class="form-control" id="file" name="file" accept="audio/*" required>
-                                            <label for="file">Voice File</label>
+                                            <label for="file">Audio File</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <button class="btn btn-primary w-100 py-3" type="submit">Analyze Voice</button>
+                                        <button class="btn btn-primary w-100 py-3" type="submit">Analyze Audio</button>
                                     </div>
                                 </div>
                             </form>
@@ -137,7 +137,7 @@
                             </div>
                             {% else %}
                             <div class="alert alert-info">
-                                Upload a voice file to see the analysis results.
+                                Upload a Audio file to see the analysis results.
                             </div>
                             {% endif %}
                         </div>
