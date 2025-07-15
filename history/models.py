@@ -42,7 +42,6 @@ class VideoProcessingResult(models.Model):
     preprocessed_images = models.JSONField(default=list)
     faces_cropped_images = models.JSONField(default=list)
     heatmap_images = models.JSONField(default=list)
-    # created_at = models.DateTimeField(auto_now_add=True)
     created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):

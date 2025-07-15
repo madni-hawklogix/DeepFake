@@ -83,14 +83,14 @@ def predictVoice(request):
                     "The model found natural speech patterns, background noise, and intonation consistent with real human recordings."
                 )
             
-            # # Save to database
-            # user_voice = UserVoice.objects.create(
-            #     user=request.user,
-            #     original_voice=original_file_name,
-            #     result=prediction,
-            #     fake_prediction=round(fake_prob * 100, 2),
-            #     real_prediction=round(real_prob * 100, 2)
-            # )
+            # Save to database
+            user_voice = UserVoice.objects.create(
+                user=request.user,
+                original_voice=original_file_name,
+                result=prediction,
+                fake_prediction=round(fake_prob * 100, 2),
+                real_prediction=round(real_prob * 100, 2)
+            )
             
             context = {
                 'prediction': prediction,

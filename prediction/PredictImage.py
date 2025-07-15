@@ -184,14 +184,14 @@ def predictImage(request):
                 'fake': round(fake_prediction * 100)
             }
 
-        # user_image = UserImage.objects.create(
-        #     user=request.user,
-        #     original_image= original_file_name,
-        #     processed_image= processed_file_name,
-        #     result =  prediction,
-        #     fake_prediction =  confidences['fake'],
-        #     real_prediction =  confidences['real']
-        # )
+        user_image = UserImage.objects.create(
+            user=request.user,
+            original_image= original_file_name,
+            processed_image= processed_file_name,
+            result =  prediction,
+            fake_prediction =  confidences['fake'],
+            real_prediction =  confidences['real']
+        )
         
         context = {
             'prediction': prediction,

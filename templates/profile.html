@@ -123,6 +123,16 @@
                                 </div>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="d-flex align-items-center text-start mx-3 pb-3" data-bs-toggle="pill"
+                                href="#tab-3">
+                                <i class="fa fa-microphone fa-2x text-primary"></i>
+                                <div class="ps-3">
+                                    <small class="text-body">Voice</small>
+                                    <h6 class="mt-n1 mb-0">History</h6>
+                                </div>
+                            </a>
+                        </li>
                     </ul>
 
                     <div class="tab-content">
@@ -173,7 +183,32 @@
                                     </div>
                                 </div>
                                 {% empty %}
-                                <p>No Images Found.</p>
+                                <p>No Video Found.</p>
+                                {% endfor %}
+
+                            </div>
+                        </div>
+                        <div id="tab-3" class="tab-pane fade show p-0">
+                            <div class="row g-4">
+                                {% for video in videos %}
+                                <div class="col-lg-6">
+                                    <div class="d-flex align-items-center">
+                                        <img class="flex-shrink-0 img-fluid rounded"
+                                            src="{%static video.image %}" alt="" style="width: 80px;">
+                                        <div class="w-100 d-flex flex-column text-start ps-4">
+                                            <h5 class="d-flex justify-content-between border-bottom pb-2">
+                                                <span>Prediction</span>
+                                                <span class="text-primary">{{video.output}}</span>
+                                            </h5>
+                                            <h6 class="d-flex justify-content-between border-bottom pb-2">
+                                                <span>Confidence</span>
+                                                <span class="text-primary">{{video.confidence}}%</span>
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% empty %}
+                                <p>No Audio Found.</p>
                                 {% endfor %}
 
                             </div>
