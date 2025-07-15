@@ -48,11 +48,11 @@
         <!-- Spinner End -->
 
 
-          <!-- Navbar & Hero Start -->
-          <div class="container-xxl position-relative p-0">
+        <!-- Navbar & Hero Start -->
+        <div class="container-xxl position-relative p-0">
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
                 <a href="/" class="navbar-brand p-0">
-                     <h1 class="text-primary m-0"></i>True Scan</h1>
+                    <h1 class="text-primary m-0"></i>True Scan</h1>
                     <!-- <img src="img/logo.png" alt="Logo"> -->
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -69,16 +69,21 @@
                     {% if not user.is_authenticated %}
                     <!-- Login Button for Non-Logged-In Users -->
                     <a href="/login" class="btn btn-primary py-2 px-4">Login</a>
-                {% else %}
+                    {% else %}
                     <!-- Display User's Name when Logged In -->
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Hello, {{ user.first_name|default:user.username }}!</a>
-                        <div class="dropdown-menu m-0">
-                            <a href="/logout-user" class="dropdown-item">Logout</a>
-                            <a href="/profile" class="dropdown-item">Profile</a>
+                        <button href="#" class="btn btn-sm btn-primary py-2 px-4 nav-link dropdown-toggle"
+                            data-bs-toggle="dropdown" style="color: #ffff; border-radius: 10px;">Hello, {{user.first_name|default:user.username }}!</button>
+                        <div class="dropdown-menu m-0" style="border-radius: 12px;">
+                            <a href="/logout-user" class="dropdown-item"
+                                style="border-radius: 15px; transition: color 0.2s;"
+                                onmouseover="this.style.color='#e11bf3'" onmouseout="this.style.color=''">Logout</a>
+                            <a href="/profile" class="dropdown-item"
+                                style="border-radius: 15px; transition: color 0.2s;"
+                                onmouseover="this.style.color='#e11bf3'" onmouseout="this.style.color=''">Profile</a>
                         </div>
                     </div>
-                {% endif %}
+                    {% endif %}
                 </div>
             </nav>
 
@@ -93,58 +98,65 @@
 
         <div class="container-fluid" style="margin-top: 80px !important;">
             {% if prediction %}
-                <h1 class="h1 text-center text-primary mb-5">Deepfake Detection Result</h1>
-        
-                <div class="card shadow-lg mx-auto mt-5" style="max-width: 40rem; border-radius: 15px;">
-                    <div class="card-body">
-                        <h3 class="text-center mb-3">Prediction: <span class="text-uppercase">{{ prediction }}</span></h3>
-        
-                        <div class="mb-4">
-                            <h4 class="mb-3 text-center">Confidence Levels</h4>
-                            <div class="mb-3">
-                                <strong>Real: {{ confidences.real }}%</strong>
-                                <div class="progress mb-2">
-                                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ confidences.real }}%" aria-valuenow="{{ confidences.real }}" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-        
-                            <div>
-                                <strong>Fake: {{ confidences.fake }}%</strong>
-                                <div class="progress">
-                                    <div class="progress-bar bg-danger" role="progressbar" style="width: {{ confidences.fake }}%" aria-valuenow="{{ confidences.fake }}" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
+            <h1 class="h1 text-center text-primary mb-5">Deepfake Detection Result</h1>
+
+            <div class="card shadow-lg mx-auto mt-5" style="max-width: 40rem; border-radius: 15px;">
+                <div class="card-body">
+                    <h3 class="text-center mb-3">Prediction: <span class="text-uppercase">{{ prediction }}</span></h3>
+
+                    <div class="mb-4">
+                        <h4 class="mb-3 text-center">Confidence Levels</h4>
+                        <div class="mb-3">
+                            <strong>Real: {{ confidences.real }}%</strong>
+                            <div class="progress mb-2">
+                                <div class="progress-bar bg-success" role="progressbar"
+                                    style="width: {{ confidences.real }}%" aria-valuenow="{{ confidences.real }}"
+                                    aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                         </div>
-        
-                        <h4 class="text-center text-primary mb-3">Detected Mask Image</h4>
-                        <div class="text-center">
-                            <img src="{% static face_with_mask %}" alt="Detected Face" class="img-fluid rounded shadow" style="max-width: 100%; max-height: 400px; object-fit: cover;">
+
+                        <div>
+                            <strong>Fake: {{ confidences.fake }}%</strong>
+                            <div class="progress">
+                                <div class="progress-bar bg-danger" role="progressbar"
+                                    style="width: {{ confidences.fake }}%" aria-valuenow="{{ confidences.fake }}"
+                                    aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
                         </div>
                     </div>
+
+                    <h4 class="text-center text-primary mb-3">Detected Mask Image</h4>
+                    <div class="text-center">
+                        <img src="{% static face_with_mask %}" alt="Detected Face" class="img-fluid rounded shadow"
+                            style="max-width: 100%; max-height: 400px; object-fit: cover;">
+                    </div>
                 </div>
-        
+            </div>
+
             {% else %}
-                <h1 class="h1 text-center text-primary mb-5">Deepfake Image Detection</h1>
-        
-                <div class="card shadow-lg mx-auto mt-5" style="max-width: 40rem; border-radius: 15px;">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Upload Image for Detection</h5>
-                        <p class="card-text text-center text-muted mb-4">Select a file and click "Detect Now" to analyze the image.</p>
-        
-                        <!-- File Upload Form -->
-                        <form class="text-center" enctype="multipart/form-data" action="{% url 'image' %}" method="post">
-                            {% csrf_token %}
-                            <div class="mb-3">
-                                <label for="fileInput" class="form-label">Choose Image</label>
-                                <input type="file" class="form-control" id="fileInput" name="file" required accept="image/*">
-                            </div>
-                            <button type="submit" class="btn btn-primary px-4 py-2 mt-3">Detect Now</button>
-                        </form>
-                    </div>
+            <h1 class="h1 text-center text-primary mb-5">Deepfake Image Detection</h1>
+
+            <div class="card shadow-lg mx-auto mt-5" style="max-width: 40rem; border-radius: 15px;">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Upload Image for Detection</h5>
+                    <p class="card-text text-center text-muted mb-4">Select a file and click "Detect Now" to analyze the
+                        image.</p>
+
+                    <!-- File Upload Form -->
+                    <form class="text-center" enctype="multipart/form-data" action="{% url 'image' %}" method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="fileInput" class="form-label">Choose Image</label>
+                            <input type="file" class="form-control" id="fileInput" name="file" required
+                                accept="image/*">
+                        </div>
+                        <button type="submit" class="btn btn-primary px-4 py-2 mt-3">Detect Now</button>
+                    </form>
                 </div>
+            </div>
             {% endif %}
         </div>
-        
+
 
 
 
@@ -163,11 +175,12 @@
                     </div>
                     <div class="col-lg-3 col-md-6">
                         <h4 class="section-title ff-secondary text-start text-primary fw-normal mb-4">Contact Us</h4>
-                        <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>University of Management and Technology C-II, Johar Town, Lahore.
+                        <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>University of Management and Technology
+                            C-II, Johar Town, Lahore.
                         </p>
                         <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+92 42 35212801-10</p>
                         <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@umt.edu.pk</p>
-                        
+
                     </div>
                     <div class="col-lg-3 col-md-6">
                         <h4 class="section-title ff-secondary text-start text-primary fw-normal mb-4">Detection Model
@@ -177,7 +190,7 @@
                         <h5 class="text-light fw-normal">Upcoming Features</h5>
                         <p>Incorporating voice recognition to combat audio-based deepfakes.</p>
                     </div>
-                    
+
                 </div>
             </div>
         </div>

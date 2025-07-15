@@ -544,3 +544,10 @@ def predict_page(request):
         except Exception as e:
             print(f"Exception occurred during prediction: {e}")
             return render(request, 'cuda_full.html')
+
+@login_required
+def checkout(request):
+    if request.method == "POST":
+        messages.success(request, "Payment successful! (Dummy)")
+        return render(request, "checkout.html", {"paid": True})
+    return render(request, "checkout.html")

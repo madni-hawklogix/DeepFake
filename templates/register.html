@@ -74,10 +74,10 @@
                     {% else %}
                         <!-- Display User's Name when Logged In -->
                         <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Hello, {{ user.first_name|default:user.username }}!</a>
-                            <div class="dropdown-menu m-0">
-                                <a href="/logout-user" class="dropdown-item">Logout</a>
-                                <a href="/profile" class="dropdown-item">Profile</a>
+                            <button href="#" class="btn btn-sm btn-primary py-2 px-4 nav-link dropdown-toggle" data-bs-toggle="dropdown" style="color: #ffff; border-radius: 10px;">Hello, {{ user.first_name|default:user.username }}!</button>
+                            <div class="dropdown-menu m-0" style="border-radius: 12px;">
+                                <a href="/logout-user" class="dropdown-item" style="border-radius: 15px; transition: color 0.2s;" onmouseover="this.style.color='#e11bf3'" onmouseout="this.style.color=''" >Logout</a>
+                                <a href="/profile" class="dropdown-item" style="border-radius: 15px; transition: color 0.2s;" onmouseover="this.style.color='#e11bf3'" onmouseout="this.style.color=''">Profile</a>
                             </div>
                         </div>
                     {% endif %}

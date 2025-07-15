@@ -30,6 +30,7 @@ python-dateutil==2.9.0.post0
 requests==2.32.3
 scikit-learn==1.6.1
 scipy==1.15.1
+supabase
 six==1.17.0
 sqlparse==0.5.3
 sympy==1.13.1
@@ -42,6 +43,7 @@ typing_extensions==4.12.2
 tzdata==2024.2
 urllib3==2.3.0
 pytorch-grad-cam==1.6.0
+psycopg2-binary
 transformers==4.38.2
 librosa==0.10.1
 soundfile==0.12.1
