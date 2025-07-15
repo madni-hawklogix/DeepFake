@@ -190,19 +190,19 @@
                         </div>
                         <div id="tab-3" class="tab-pane fade show p-0">
                             <div class="row g-4">
-                                {% for video in videos %}
+                                {% for voice in voices %}
                                 <div class="col-lg-6">
                                     <div class="d-flex align-items-center">
                                         <img class="flex-shrink-0 img-fluid rounded"
-                                            src="{%static video.image %}" alt="" style="width: 80px;">
+                                            src="{%static voice.image %}" alt="" style="width: 80px;">
                                         <div class="w-100 d-flex flex-column text-start ps-4">
                                             <h5 class="d-flex justify-content-between border-bottom pb-2">
                                                 <span>Prediction</span>
-                                                <span class="text-primary">{{video.output}}</span>
+                                                <span class="text-primary">{{voice.output}}</span>
                                             </h5>
                                             <h6 class="d-flex justify-content-between border-bottom pb-2">
                                                 <span>Confidence</span>
-                                                <span class="text-primary">{{video.confidence}}%</span>
+                                                <span class="text-primary">{{voice.confidence}}%</span>
                                             </h6>
                                         </div>
                                     </div>
