@@ -100,10 +100,11 @@
                                         <div class="form-floating">
                                             <input type="file" class="form-control" id="file" name="file" accept="audio/*" required>
                                             <label for="file">Audio File</label>
+                                            <div id="fileHint" class="text-danger mt-2" style="display:none; font-size:0.95em;">Please choose a file before submitting.</div>
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <button class="btn btn-primary w-100 py-3" type="submit">Analyze Audio</button>
+                                        <button id="analyzeAudioBtn" class="btn btn-primary w-100 py-3" type="submit" disabled>Analyze Audio</button>
                                     </div>
                                 </div>
                             </form>
@@ -195,6 +196,28 @@
 
     <!-- Template Javascript -->
     <script src="/static/js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var fileInput = document.getElementById('file');
+        var btn = document.getElementById('analyzeAudioBtn');
+        var form = fileInput && fileInput.form;
+        var hint = document.getElementById('fileHint');
+        if(fileInput && btn && form && hint) {
+            fileInput.addEventListener('change', function() {
+                btn.disabled = !fileInput.value;
+                if(fileInput.value) {
+                    hint.style.display = 'none';
+                }
+            });
+            form.addEventListener('submit', function(e) {
+                if(!fileInput.value) {
+                    e.preventDefault();
+                    hint.style.display = 'block';
+                }
+            });
+        }
+    });
+    </script>
     <script>
     // Mobile Pull-to-Refresh: Reload page on pull down at top
     (function() {
