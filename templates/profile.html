@@ -128,7 +128,7 @@
                                 href="#tab-3">
                                 <i class="fa fa-microphone fa-2x text-primary"></i>
                                 <div class="ps-3">
-                                    <small class="text-body">Voice</small>
+                                    <small class="text-body">Audio</small>
                                     <h6 class="mt-n1 mb-0">History</h6>
                                 </div>
                             </a>
@@ -191,6 +191,11 @@
                         <div id="tab-3" class="tab-pane fade show p-0">
                             <div class="row g-4">
                                 {% for voice in voices %}
+                                <script>
+                                    console.log("voice.fake_prediction:", "{{ voice.fake_prediction }}");
+                                    console.log("voice.real_prediction:", "{{ voice.real_prediction }}");
+                                    console.log("voice.result:", "{{ voice.result }}");
+                                </script>
                                 <div class="col-lg-6">
                                     <div class="d-flex align-items-center">
                                         <img class="flex-shrink-0 img-fluid rounded"
@@ -198,19 +203,16 @@
                                         <div class="w-100 d-flex flex-column text-start ps-4">
                                             <h5 class="d-flex justify-content-between border-bottom pb-2">
                                                 <span>Prediction</span>
-                                                <span class="text-primary">{{voice.output}}</span>
+                                                <span class="text-primary">{{voice.result }}</span>
                                             </h5>
                                             <h6 class="d-flex justify-content-between border-bottom pb-2">
                                                 <span>Confidence</span>
-                                                <span class="text-primary">{{voice.confidence}}%</span>
+                                                <span class="text-primary">Fake: {{voice.fake_prediction}}% | Real: {{voice.real_prediction}}%</span>
                                             </h6>
                                         </div>
                                     </div>
                                 </div>
-                                {% empty %}
-                                <p>No Audio Found.</p>
                                 {% endfor %}
-
                             </div>
                         </div>
                     </div>
