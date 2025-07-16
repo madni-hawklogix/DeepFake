@@ -65,21 +65,24 @@ def predictVoice(request):
         # Process the audio file
         try:
             probabilities = process_audio(original_file_path)
-            real_prob = probabilities[0]  # Human (Real)
-            fake_prob = probabilities[1]  # AI (Fake)
+            real_prob = probabilities[1]  # Human (Real)
+            fake_prob = probabilities[0]  # AI (Fake)
+
+            print(real_prob*100, fake_prob*100)
             
             prediction = "real" if real_prob > fake_prob else "fake"
-            confidence = max(real_prob, fake_prob) * 100
+            confidence = (real_prob - fake_prob) * 100
+            print(confidence)
             
             # Generate description based on prediction
             if prediction == "fake":
                 description = (
-                    f"Detected as AI-generated audio with confidence {fake_prob*100:.1f}%. "
+                    f"Detected as AI-generated audio with confidence {confidence:.1f}%. "
                     "The model identified patterns typical of synthetic voices, such as unnatural prosody, lack of background noise, or digital artifacts."
                 )
             else:
                 description = (
-                    f"Detected as human audio with confidence {real_prob*100:.1f}%. "
+                    f"Detected as human audio with confidence {confidence:.1f}%. "
                     "The model found natural speech patterns, background noise, and intonation consistent with real human recordings."
                 )
             
@@ -88,15 +91,15 @@ def predictVoice(request):
                 user=request.user,
                 original_voice=original_file_name,
                 result=prediction,
-                fake_prediction=round(fake_prob * 100, 2),
-                real_prediction=round(real_prob * 100, 2)
+                fake_prediction = float(f"{fake_prob * 100:.1f}"),
+                real_prediction = float(f"{real_prob * 100:.1f}"),
             )
             
             context = {
                 'prediction': prediction,
                 'confidences': {
-                    'real': round(real_prob * 100, 2),
-                    'fake': round(fake_prob * 100, 2)
+                    'real': float(f"{real_prob * 100:.1f}"),
+                    'fake': float(f"{fake_prob * 100:.1f}")
                 },
                 'description': description,
                 'original_voice_url': fs.url(original_file_name)
