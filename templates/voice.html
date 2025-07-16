@@ -92,15 +92,24 @@
                 <div class="row g-5">
                     <div class="col-lg-6">
                         <div class="wow fadeInUp" data-wow-delay="0.1s">
-                            <h1 class="mb-4">Upload Audio File</h1>
-                            <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                            <h1 class="mb-4">Upload or Record Audio File</h1>
+                            <form id="audioForm" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
                                 {% csrf_token %}
                                 <div class="row g-3">
                                     <div class="col-md-12">
-                                        <div class="form-floating">
+                                        <div class="form-floating mb-3">
                                             <input type="file" class="form-control" id="file" name="file" accept="audio/*" required>
                                             <label for="file">Audio File</label>
                                             <div id="fileHint" class="text-danger mt-2" style="display:none; font-size:0.95em;">Please choose a file before submitting.</div>
+                                        </div>
+                                        <div class="mb-3 text-center">
+                                            <span style="font-weight:600;">OR</span>
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <button type="button" id="recordBtn" class="btn btn-outline-primary w-100 mb-2"><i class="fa fa-microphone"></i> <span id="recordBtnText">Start Recording</span></button>
+                                            <audio id="recordedAudio" controls style="display:none; width:100%; margin-top:10px;"></audio>
+                                            <input type="hidden" id="recordedAudioData" name="recorded_audio_data">
+                                            <div id="recordHint" class="text-danger mt-2" style="display:none; font-size:0.95em;">Please record audio before submitting.</div>
                                         </div>
                                     </div>
                                     <div class="col-12">
@@ -200,19 +209,80 @@
     document.addEventListener('DOMContentLoaded', function() {
         var fileInput = document.getElementById('file');
         var btn = document.getElementById('analyzeAudioBtn');
-        var form = fileInput && fileInput.form;
+        var form = document.getElementById('audioForm');
         var hint = document.getElementById('fileHint');
+        var recordBtn = document.getElementById('recordBtn');
+        var recordBtnText = document.getElementById('recordBtnText');
+        var recordedAudio = document.getElementById('recordedAudio');
+        var recordedAudioData = document.getElementById('recordedAudioData');
+        var recordHint = document.getElementById('recordHint');
+        var mediaRecorder;
+        var audioChunks = [];
+        var isRecording = false;
+        var hasRecording = false;
+
+        function updateAnalyzeBtn() {
+            btn.disabled = !(fileInput.value || hasRecording);
+        }
+
         if(fileInput && btn && form && hint) {
             fileInput.addEventListener('change', function() {
-                btn.disabled = !fileInput.value;
+                updateAnalyzeBtn();
                 if(fileInput.value) {
                     hint.style.display = 'none';
                 }
             });
             form.addEventListener('submit', function(e) {
-                if(!fileInput.value) {
+                if(!fileInput.value && !hasRecording) {
                     e.preventDefault();
-                    hint.style.display = 'block';
+                    hint.style.display = fileInput.value ? 'none' : 'block';
+                    recordHint.style.display = hasRecording ? 'none' : 'block';
+                } else {
+                    hint.style.display = 'none';
+                    recordHint.style.display = 'none';
+                }
+            });
+        }
+
+        if(recordBtn && recordedAudio && recordedAudioData) {
+            recordBtn.addEventListener('click', function() {
+                if(!isRecording) {
+                    navigator.mediaDevices.getUserMedia({ audio: true })
+                        .then(function(stream) {
+                            mediaRecorder = new MediaRecorder(stream);
+                            audioChunks = [];
+                            mediaRecorder.ondataavailable = function(e) {
+                                audioChunks.push(e.data);
+                            };
+                            mediaRecorder.onstop = function() {
+                                var audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                                var audioUrl = URL.createObjectURL(audioBlob);
+                                recordedAudio.src = audioUrl;
+                                recordedAudio.style.display = 'block';
+                                // Convert blob to base64 for form submission
+                                var reader = new FileReader();
+                                reader.onloadend = function() {
+                                    recordedAudioData.value = reader.result;
+                                    hasRecording = true;
+                                    updateAnalyzeBtn();
+                                };
+                                reader.readAsDataURL(audioBlob);
+                            };
+                            mediaRecorder.start();
+                            isRecording = true;
+                            recordBtnText.textContent = 'Stop Recording';
+                            recordBtn.classList.remove('btn-outline-primary');
+                            recordBtn.classList.add('btn-danger');
+                        })
+                        .catch(function(err) {
+                            alert('Microphone access denied or not available.');
+                        });
+                } else {
+                    mediaRecorder.stop();
+                    isRecording = false;
+                    recordBtnText.textContent = 'Start Recording';
+                    recordBtn.classList.remove('btn-danger');
+                    recordBtn.classList.add('btn-outline-primary');
                 }
             });
         }

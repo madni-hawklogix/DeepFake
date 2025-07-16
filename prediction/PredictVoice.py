@@ -11,6 +11,8 @@ import os
 from django.core.files.storage import FileSystemStorage
 from datetime import datetime
 from history.models import UserVoice
+import base64
+import re
 
 # Initialize model and feature extractor
 MODEL_NAME = "motheecreator/Deepfake-audio-detection"
@@ -45,22 +47,37 @@ def process_audio(audio_file):
 def predictVoice(request):
     if request.method == 'POST':
         uploaded_file = request.FILES.get('file')
-        if not uploaded_file:
-            return JsonResponse({'error': 'No file uploaded'})
+        audio_was_recorded = False
 
-        # Save the original uploaded audio
-        fs = FileSystemStorage()
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S').replace(':','-')
-        original_file_name = f"original_{uploaded_file.name.split('.')[0]}-{timestamp}.wav"
-        original_file_path = os.path.join(settings.BASE_DIR / 'uploaded_voices', original_file_name)
-        
-        # Ensure the directory exists
-        os.makedirs(os.path.dirname(original_file_path), exist_ok=True)
-        
-        # Save the file
-        with open(original_file_path, 'wb+') as destination:
-            for chunk in uploaded_file.chunks():
-                destination.write(chunk)
+        if not uploaded_file:
+            # Try to get recorded audio from POST
+            recorded_audio_data = request.POST.get('recorded_audio_data')
+            if recorded_audio_data:
+                # recorded_audio_data is a data URL: 'data:audio/wav;base64,...'
+                match = re.match(r'data:audio/\w+;base64,(.*)', recorded_audio_data)
+                if match:
+                    audio_data = base64.b64decode(match.group(1))
+                    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S').replace(':','-')
+                    original_file_name = f"recorded_{timestamp}.wav"
+                    original_file_path = os.path.join(settings.BASE_DIR / 'uploaded_voices', original_file_name)
+                    os.makedirs(os.path.dirname(original_file_path), exist_ok=True)
+                    with open(original_file_path, 'wb') as f:
+                        f.write(audio_data)
+                    audio_was_recorded = True
+                else:
+                    return JsonResponse({'error': 'Invalid audio data'})
+            else:
+                return JsonResponse({'error': 'No file uploaded or recorded'})
+        else:
+            # Save the uploaded file as before
+            fs = FileSystemStorage()
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S').replace(':','-')
+            original_file_name = f"original_{uploaded_file.name.split('.')[0]}-{timestamp}.wav"
+            original_file_path = os.path.join(settings.BASE_DIR / 'uploaded_voices', original_file_name)
+            os.makedirs(os.path.dirname(original_file_path), exist_ok=True)
+            with open(original_file_path, 'wb+') as destination:
+                for chunk in uploaded_file.chunks():
+                    destination.write(chunk)
         
         # Process the audio file
         try:
