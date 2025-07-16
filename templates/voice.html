@@ -161,6 +161,41 @@
 
     <!-- Template Javascript -->
     <script src="/static/js/main.js"></script>
+    <script>
+    // Mobile Pull-to-Refresh: Reload page on pull down at top
+    (function() {
+        let touchStartY = 0;
+        let touchMoveY = 0;
+        let isPulling = false;
+        const threshold = 70; // px to trigger refresh
+
+        function isMobile() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+
+        if (isMobile()) {
+            window.addEventListener('touchstart', function(e) {
+                if (window.scrollY === 0) {
+                    touchStartY = e.touches[0].clientY;
+                    isPulling = true;
+                }
+            }, { passive: true });
+
+            window.addEventListener('touchmove', function(e) {
+                if (!isPulling) return;
+                touchMoveY = e.touches[0].clientY;
+                if (touchMoveY - touchStartY > threshold) {
+                    isPulling = false;
+                    location.reload();
+                }
+            }, { passive: true });
+
+            window.addEventListener('touchend', function() {
+                isPulling = false;
+            });
+        }
+    })();
+    </script>
 </body>
 
 </html> 
