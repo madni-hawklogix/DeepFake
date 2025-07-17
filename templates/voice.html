@@ -95,7 +95,7 @@
                     <div class="col-lg-6">
                         <div class="wow fadeInUp" data-wow-delay="0.1s">
                             <h1 class="mb-4">Upload Audio File</h1>
-                            <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                            <form id="audioUploadForm" class="needs-validation" novalidate>
                                 {% csrf_token %}
                                 <div class="row g-3">
                                     <div class="col-md-12">
@@ -114,35 +114,9 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="wow fadeInUp" data-wow-delay="0.3s">
-                            <h1 class="mb-4">Results</h1>
-                            {% if prediction %}
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Analysis Result</h5>
-                                    <p class="card-text">
-                                        <strong>Prediction:</strong> {{ prediction|title }}<br>
-                                        <strong>Confidence:</strong><br>
-                                        Real: {{ confidences.real }}%<br>
-                                        Fake: {{ confidences.fake }}%
-                                    </p>
-                                    {% if description %}
-                                    <div class="alert alert-info mt-3">
-                                        {{ description }}
-                                    </div>
-                                    {% endif %}
-                                    {% if original_voice_url %}
-                                    <audio controls class="w-100 mt-3">
-                                        <source src="{{ original_voice_url }}" type="audio/wav">
-                                        Your browser does not support the audio element.
-                                    </audio>
-                                    {% endif %}
-                                </div>
+                            <div id="result">
+
                             </div>
-                            {% else %}
-                            <div class="alert alert-info">
-                                Upload a Audio file to see the analysis results.
-                            </div>
-                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -198,11 +172,11 @@
 
     <!-- Template Javascript -->
     <script src="/static/js/main.js"></script>
-    <script>
+    <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function() {
         var fileInput = document.getElementById('file');
         var btn = document.getElementById('analyzeAudioBtn');
-        var form = fileInput && fileInput.form;
+        var form = document.getElementById('audioUploadForm');
         var hint = document.getElementById('fileHint');
         if(fileInput && btn && form && hint) {
             fileInput.addEventListener('change', function() {
@@ -212,10 +186,57 @@
                 }
             });
             form.addEventListener('submit', function(e) {
+                e.preventDefault();
                 if(!fileInput.value) {
-                    e.preventDefault();
                     hint.style.display = 'block';
+                    return;
                 }
+                var file = fileInput.files[0];
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var base64Audio = e.target.result.split(',')[1];
+                    fetch('/voice/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                        },
+                        body: JSON.stringify({ audio_base64: base64Audio })
+                    })
+                    .then(response =>
+                        response.json())
+                    .then(data => {
+                        console.log("Data",data)
+                        // Update the Results section with the returned data
+                        // You may want to update the DOM here as needed
+                        var resultHTML = `
+                        <h1 class="mb-4">Results</h1>
+                        <div class="card">
+                            <div class="card-body">
+                                <p id="card-text" class="card-text">
+                                    <strong>Prediction:</strong> ${data.prediction}<br>
+                                    <strong>Confidence:</strong><br>
+                                    Real: ${data.confidences.real}%<br>
+                                    Fake: ${data.confidences.fake}%
+                                </p>
+                                ${data.description ? `<div id="alert-info" class="alert alert-info mt-3">${data.description}</div>` : ''}
+                                ${data.original_voice_url ? `
+                                    <audio id="audio" controls class="w-100 mt-3">
+                                        <source id="audio-source" src="${data.original_voice_url}" type="audio/wav">
+                                        Your browser does not support the audio element.
+                                    </audio>` : ''}
+                            </div>
+                        </div>`;
+
+                    // Insert the result into the #result div
+                    document.getElementById('result').innerHTML = resultHTML;
+                    })
+                    .catch(err => {
+                        hint.textContent = 'Error uploading or processing file.';
+                        hint.style.display = 'block';
+                    });
+                };
+                reader.readAsDataURL(file);
             });
         }
     });

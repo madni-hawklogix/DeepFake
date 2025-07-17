@@ -11,6 +11,8 @@ import os
 from django.core.files.storage import FileSystemStorage
 from datetime import datetime
 from history.models import UserVoice
+import base64
+from io import BytesIO
 
 # Initialize model and feature extractor
 MODEL_NAME = "motheecreator/Deepfake-audio-detection"
@@ -30,51 +32,79 @@ def load_audio_as_np(file_path, target_sr=16000):
     samples = np.array(audio.get_array_of_samples()).astype(np.float32) / (2**15)
     return samples, target_sr
 
-def process_audio(audio_file):
-    samples, sample_rate = load_audio_as_np(audio_file)
-    inputs = feature_extractor(samples, sampling_rate=sample_rate, return_tensors="pt")
-    inputs = {k: v.to(device) for k, v in inputs.items()}
+# def load_audio_from_base64(base64_str, target_sr=16000):
+#     audio_bytes = base64.b64decode(base64_str)
+#     print("Audio Bytes:  ",audio_bytes)
+#     print("Debug 2")
+#     audio = AudioSegment.from_file(BytesIO(audio_bytes))
+#     print("Debug 3")
+#     audio = audio.set_channels(1).set_frame_rate(target_sr)
+#     print("Debug 4")
+#     samples = np.array(audio.get_array_of_samples()).astype(np.float32) / (2**15)
+#     print("Debug 5")
+#     return samples, target_sr
+
+def load_audio_from_base64(base64_str, target_sr=16000, channels=1, bit_depth=16):
+    try:
+        if base64_str.startswith('data:audio'):
+            base64_str = base64_str.split(',')[1]
+        audio_bytes = base64.b64decode(base64_str)
+
+        sample_width = bit_depth // 8
+
+        if len(audio_bytes) % sample_width != 0:
+            padding_size = sample_width - (len(audio_bytes) % sample_width)
+            audio_bytes += b'\0' * padding_size
+
+        audio_data = np.frombuffer(audio_bytes, dtype=np.int16)
+
+        audio_data = audio_data.astype(np.float32) / (2 ** 15)
+        if target_sr != 44100:
+            resample_factor = target_sr / 44100
+            resampled_audio = np.interp(
+                np.linspace(0, len(audio_data), int(len(audio_data) * resample_factor)),
+                np.arange(len(audio_data)),
+                audio_data
+            )
+            audio_data = resampled_audio
+        return audio_data, target_sr
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return None, None
+
+# def process_audio(audio_file):
+#     samples, sample_rate = load_audio_as_np(audio_file)
+#     inputs = feature_extractor(samples, sampling_rate=sample_rate, return_tensors="pt")
+#     inputs = {k: v.to(device) for k, v in inputs.items()}
     
-    with torch.no_grad():
-        logits = model(**inputs).logits
-        probabilities = torch.softmax(logits, dim=-1).squeeze()
+#     with torch.no_grad():
+#         logits = model(**inputs).logits
+#         probabilities = torch.softmax(logits, dim=-1).squeeze()
         
-    return probabilities.cpu().numpy()
+#     return probabilities.cpu().numpy()
 
 @csrf_exempt
 def predictVoice(request):
     if request.method == 'POST':
-        uploaded_file = request.FILES.get('file')
-        if not uploaded_file:
-            return render(request, 'voice.html', {'error': 'No file uploaded'})
-
-        # Save the original uploaded audio
-        fs = FileSystemStorage()
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S').replace(':','-')
-        original_file_name = f"original_{uploaded_file.name.split('.')[0]}-{timestamp}.wav"
-        original_file_path = os.path.join(settings.BASE_DIR / 'uploaded_voices', original_file_name)
-        
-        # Ensure the directory exists
-        os.makedirs(os.path.dirname(original_file_path), exist_ok=True)
-        
-        # Save the file
-        with open(original_file_path, 'wb+') as destination:
-            for chunk in uploaded_file.chunks():
-                destination.write(chunk)
-        
-        # Process the audio file
+        import json
         try:
-            probabilities = process_audio(original_file_path)
-            real_prob = probabilities[1]  # Human (Real)
-            fake_prob = probabilities[0]  # AI (Fake)
-
-            print(real_prob*100, fake_prob*100)
-            
+            data = json.loads(request.body)
+            base64_audio = data.get('audio_base64')
+        except Exception:
+            base64_audio = None
+        if not base64_audio:
+            return JsonResponse({'error': 'No audio data provided'}, status=400)
+        try:
+            samples, sample_rate = load_audio_from_base64(base64_audio)
+            inputs = feature_extractor(samples, sampling_rate=sample_rate, return_tensors="pt")
+            inputs = {k: v.to(device) for k, v in inputs.items()}
+            with torch.no_grad():
+                logits = model(**inputs).logits
+                probabilities = torch.softmax(logits, dim=-1).squeeze()
+            real_prob = probabilities[1]
+            fake_prob = probabilities[0]
             prediction = "real" if real_prob > fake_prob else "fake"
             confidence = (real_prob - fake_prob) * 100
-            print(confidence)
-            
-            # Generate description based on prediction
             if prediction == "fake":
                 description = (
                     f"Detected as AI-generated audio with confidence {confidence:.1f}%. "
@@ -85,11 +115,10 @@ def predictVoice(request):
                     f"Detected as human audio with confidence {confidence:.1f}%. "
                     "The model found natural speech patterns, background noise, and intonation consistent with real human recordings."
                 )
-            
             # Save to database
             user_voice = UserVoice.objects.create(
                 user=request.user,
-                original_voice=original_file_name,
+                original_voice="something",
                 result=prediction,
                 fake_prediction = float(f"{fake_prob * 100:.1f}"),
                 real_prediction = float(f"{real_prob * 100:.1f}"),
@@ -102,12 +131,13 @@ def predictVoice(request):
                     'fake': float(f"{fake_prob * 100:.1f}")
                 },
                 'description': description,
-                'original_voice_url': fs.url(original_file_name)
             }
-            
-            return render(request, 'voice.html', context)
+            print("context")
+            # return render(request, 'voice.html', context)
+            return JsonResponse(context)
             
         except Exception as e:
             return render(request, 'voice.html', {'error': f'Error processing audio: {str(e)}'})
     
     return render(request, 'voice.html', {'error': 'Invalid request method'})
+
