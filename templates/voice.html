@@ -300,6 +300,7 @@
                 audioChunks = [];
                 recordedAudioElement.src = '';
                 audioPreview.style.display = 'none';
+                document.getElementById('result').innerHTML = '';
             }
         });
 
@@ -400,6 +401,8 @@
                 mediaRecorder.stop();
             }
             stopTimer();
+            // Clear result when a new recording is made
+            document.getElementById('result').innerHTML = '';
         }
 
         // Timer function to show recording time
