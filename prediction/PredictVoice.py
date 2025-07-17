@@ -46,7 +46,7 @@ def predictVoice(request):
     if request.method == 'POST':
         uploaded_file = request.FILES.get('file')
         if not uploaded_file:
-            return JsonResponse({'error': 'No file uploaded'})
+            return render(request, 'voice.html', {'error': 'No file uploaded'})
 
         # Save the original uploaded audio
         fs = FileSystemStorage()
@@ -108,6 +108,6 @@ def predictVoice(request):
             return render(request, 'voice.html', context)
             
         except Exception as e:
-            return JsonResponse({'error': f'Error processing audio: {str(e)}'})
+            return render(request, 'voice.html', {'error': f'Error processing audio: {str(e)}'})
     
-    return JsonResponse({'error': 'Invalid request method'}) 
+    return render(request, 'voice.html', {'error': 'Invalid request method'})

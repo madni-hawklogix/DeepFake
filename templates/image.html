@@ -34,6 +34,9 @@
 
     <!-- Template Stylesheet -->
     <link href="/static/css/style.css" rel="stylesheet">
+
+    <!-- Notyf CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
 </head>
 
 <body>
@@ -73,7 +76,8 @@
                     <!-- Display User's Name when Logged In -->
                     <div class="nav-item dropdown">
                         <button href="#" class="btn btn-sm btn-primary py-2 px-4 nav-link dropdown-toggle"
-                            data-bs-toggle="dropdown" style="color: #ffff; border-radius: 10px;">Hello, {{user.first_name|default:user.username }}!</button>
+                            data-bs-toggle="dropdown" style="color: #ffff; border-radius: 10px;">Hello,
+                            {{user.first_name|default:user.username }}!</button>
                         <div class="dropdown-menu m-0" style="border-radius: 12px;">
                             <a href="/logout-user" class="dropdown-item"
                                 style="border-radius: 15px; transition: color 0.2s;"
@@ -151,7 +155,8 @@
                                 accept="image/*">
                         </div>
                         <button id="detectNowBtn" type="submit" class="btn btn-primary px-4 py-2 mt-3">
-                            <span id="detectNowSpinner" class="spinner-border spinner-border-sm me-2" style="display: none;" role="status" aria-hidden="true"></span>
+                            <span id="detectNowSpinner" class="spinner-border spinner-border-sm me-2"
+                                style="display: none;" role="status" aria-hidden="true"></span>
                             Detect Now
                         </button>
                     </form>
@@ -221,51 +226,62 @@
     <!-- Template Javascript -->
     <script src="/static/js/main.js"></script>
     <script>
-    // Mobile Pull-to-Refresh: Reload page on pull down at top
-    (function() {
-        let touchStartY = 0;
-        let touchMoveY = 0;
-        let isPulling = false;
-        const threshold = 70; // px to trigger refresh
+        // Mobile Pull-to-Refresh: Reload page on pull down at top
+        (function () {
+            let touchStartY = 0;
+            let touchMoveY = 0;
+            let isPulling = false;
+            const threshold = 70; // px to trigger refresh
 
-        function isMobile() {
-            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        }
+            function isMobile() {
+                return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            }
 
-        if (isMobile()) {
-            window.addEventListener('touchstart', function(e) {
-                if (window.scrollY === 0) {
-                    touchStartY = e.touches[0].clientY;
-                    isPulling = true;
-                }
-            }, { passive: true });
+            if (isMobile()) {
+                window.addEventListener('touchstart', function (e) {
+                    if (window.scrollY === 0) {
+                        touchStartY = e.touches[0].clientY;
+                        isPulling = true;
+                    }
+                }, { passive: true });
 
-            window.addEventListener('touchmove', function(e) {
-                if (!isPulling) return;
-                touchMoveY = e.touches[0].clientY;
-                if (touchMoveY - touchStartY > threshold) {
+                window.addEventListener('touchmove', function (e) {
+                    if (!isPulling) return;
+                    touchMoveY = e.touches[0].clientY;
+                    if (touchMoveY - touchStartY > threshold) {
+                        isPulling = false;
+                        location.reload();
+                    }
+                }, { passive: true });
+
+                window.addEventListener('touchend', function () {
                     isPulling = false;
-                    location.reload();
-                }
-            }, { passive: true });
-
-            window.addEventListener('touchend', function() {
-                isPulling = false;
-            });
-        }
-    })();
+                });
+            }
+        })();
     </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             var form = document.querySelector('form.text-center[enctype="multipart/form-data"]');
             var btn = document.getElementById('detectNowBtn');
             var spinner = document.getElementById('detectNowSpinner');
-            if(form && btn && spinner) {
-                form.addEventListener('submit', function() {
+            if (form && btn && spinner) {
+                form.addEventListener('submit', function () {
                     btn.disabled = true;
                     spinner.style.display = 'inline-block';
                 });
             }
+        });
+    </script>
+    </script>
+    <!-- Notyf JS -->
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            {% if error %}
+            var notyf = new Notyf({ duration: 4000, position: { x: 'right', y: 'top' } });
+            notyf.error("{{ error|escapejs }}");
+            {% endif %}
         });
     </script>
 </body>

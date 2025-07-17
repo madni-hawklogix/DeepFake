@@ -121,7 +121,7 @@ def predictImage(request):
     if request.method == 'POST':
         uploaded_file = request.FILES.get('file')
         if not uploaded_file:
-            return JsonResponse({'error': 'No file uploaded'})
+            return render(request, 'image.html', {'error': 'No file uploaded'})
 
         # Open image and convert to RGB mode
         image = Image.open(uploaded_file).convert('RGB')
@@ -137,7 +137,7 @@ def predictImage(request):
         # Face detection and processing
         face = mtcnn(image)
         if face is None:
-            return JsonResponse({'error': 'No face detected'})
+            return render(request, 'image.html', {'error': 'No face detected'})
 
         face = face.unsqueeze(0)
         face = F.interpolate(face, size=(256, 256), mode='bilinear', align_corners=False)
@@ -201,6 +201,6 @@ def predictImage(request):
             'processed_image_url': processed_file_url  # URL of the processed image
         }
         
-        return render(request, 'image.html', context)
+        return render(request, 'image.html', context)    
     
-    return JsonResponse({'error': 'Invalid request method'})
+    return render(request, 'image.html', {'error': 'Invalid request method'})
