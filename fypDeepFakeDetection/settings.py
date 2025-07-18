@@ -132,6 +132,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+SECURE_SSL_REDIRECT = True
+
 # settings.py
 
 # Define the directory where collected static files will be stored
