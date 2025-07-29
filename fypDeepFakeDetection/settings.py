@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-3h-@)8+*+4_z3%1sin*qf3t)30xhqw-y(lkgj&x-p5ehfi(b)b
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.18.210', '0.0.0.0',"192.168.18.29",'.ngrok-free.app', '5.189.174.219','truescan.work.gd']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.18.210', '0.0.0.0',"192.168.18.29",'.ngrok-free.app', '5.189.174.219']
 
 
 # Application definition
@@ -131,8 +131,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-
-SECURE_SSL_REDIRECT = True
 
 # settings.py
 
